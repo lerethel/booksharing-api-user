@@ -1,0 +1,1 @@
+This is the microservice that manages the user database for my booksharing app API. It uses PostgeSQL and MikroORM. Refer to the gateway [README](https://github.com/lerethel/booksharing-api-gateway/blob/master/README.md) to learn how to use it.
