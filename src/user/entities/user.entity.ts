@@ -2,12 +2,15 @@ import {
   BeforeCreate,
   BeforeUpdate,
   Entity,
+  Enum,
   EventArgs,
+  Opt,
   PrimaryKey,
   Property,
 } from '@mikro-orm/core';
 import { BadRequestException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
+import { UserRoles } from '../enums/user-roles.enum';
 
 @Entity()
 export class User {
@@ -22,6 +25,9 @@ export class User {
 
   @Property({ hidden: true })
   password: string;
+
+  @Enum(() => UserRoles)
+  role: UserRoles & Opt = UserRoles.User;
 
   @BeforeCreate()
   @BeforeUpdate()

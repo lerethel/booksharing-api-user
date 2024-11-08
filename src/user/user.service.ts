@@ -64,11 +64,12 @@ export class UserService {
     return null;
   }
 
-  async verify(dto: VerifyUserDto) {
+  async verify(dto: VerifyUserDto): Promise<Pick<User, 'id' | 'role'> | null> {
     const { email, password } = dto;
     const foundUser = await this.userRepository.findOne({ email });
     return foundUser && (await foundUser.verifyPassword(password))
-      ? foundUser.id
+      ? // The gateway will send this to the auth microservice for storage.
+        { id: foundUser.id, role: foundUser.role }
       : null;
   }
 }
