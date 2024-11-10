@@ -1,4 +1,9 @@
-import { Controller, UseFilters } from '@nestjs/common';
+import {
+  Controller,
+  ParseEnumPipe,
+  ParseIntPipe,
+  UseFilters,
+} from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { UserAlreadyExistsExceptionFilter } from '../filters/unique-exception.filter';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -9,6 +14,7 @@ import {
   UpdateUserPasswordDto,
 } from './dto/update-user.dto';
 import { VerifyUserDto } from './dto/verify-user.dto';
+import { UserRoles } from './enums/user-roles.enum';
 import { UserService } from './user.service';
 
 @Controller()
@@ -43,6 +49,14 @@ export class UserController {
     @Payload('id') id: number,
   ) {
     return this.userService.updatePassword(dto, id);
+  }
+
+  @MessagePattern({ cmd: 'updateUserRole' })
+  updateRole(
+    @Payload('role', new ParseEnumPipe(UserRoles)) role: UserRoles,
+    @Payload('id', ParseIntPipe) id: number,
+  ) {
+    return this.userService.updateRole(role, id);
   }
 
   @MessagePattern({ cmd: 'deleteUser' })

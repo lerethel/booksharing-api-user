@@ -10,6 +10,7 @@ import {
 } from './dto/update-user.dto';
 import { VerifyUserDto } from './dto/verify-user.dto';
 import { User } from './entities/user.entity';
+import { UserRoles } from './enums/user-roles.enum';
 
 @Injectable()
 export class UserService {
@@ -53,6 +54,12 @@ export class UserService {
     await foundUser.verifyPasswordOrFail(dto.password);
 
     foundUser.password = newPassword;
+    await this.manager.flush();
+    return null;
+  }
+
+  async updateRole(role: UserRoles, id: number) {
+    (await this.userRepository.findOneOrFail(id)).role = role;
     await this.manager.flush();
     return null;
   }
